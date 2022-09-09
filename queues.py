@@ -55,10 +55,11 @@ class Queue:
             return True
         else:
             return self.max_size > self.get_size()
-        
+# is_empty method returns True or False depending on if the queue is empty  
     def is_empty(self):
         return self.size == 0
 
+# example usage of queues and queue methods
 print("Creating a deli line with up to 10 orders...\n------------")
 deli_line = Queue(10)
 print("Adding orders to our deli line...\n------------")
