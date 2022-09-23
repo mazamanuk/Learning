@@ -25,6 +25,18 @@ class LinkedList:
         new_node = Node(new_value)
         new_node.set_next_node(self.head_node)
         self.head_node = new_node
+# Alternate insert method 
+    def insert(self, new_node):
+        current_node = self.head_node
+
+        if not current_node:
+            self.head_node = new_node
+
+        while(current_node):
+            next_node = current_node.get_next_node()
+            if not next_node:
+                current_node.set_next_node(new_node)
+            current_node = next_node
 # Returns a string containing all values from all nodes within the linked list
     def stringify_list(self):
         string_list = ""
