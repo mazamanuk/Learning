@@ -36,6 +36,9 @@ class Vertex:
 
     def get_edges(self):
         return list(self.edges.keys())
+  
+    def get_edge_weight(self, edge):
+        return self.edges[edge]
 
 from random import randrange
 

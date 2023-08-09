@@ -3,7 +3,7 @@
 def sum_to_one(n):
     result = 1
     call_stack = []
-# Base case at n = 1 would simply return 1, while n > 1 we append to the call stack and print when adding new values to the current result    
+# Base case at n = 1 would simply return 1, while n > 1 we append to the call stack and print when adding new values to the current result
     while n != 1:
         execution_context = {"n_value": n}
         call_stack.append(execution_context)
@@ -37,10 +37,10 @@ Adding 4 to 6
 
 ## Creating our sum_to_one function using recursion, base case at n = 1 where the function simply returns 1 and otherwise returns n + the recursive function call with argument n - 1
 def sum_to_one(n):
-  if n == 1:
-    return n
-  print(f"Recursing with input: {n}")
-  return n + sum_to_one(n-1)
+    if n == 1:
+        return n
+    print(f"Recursing with input: {n}")
+    return n + sum_to_one(n-1)
 
 print(sum_to_one(7))
 # Output here would be:
@@ -58,10 +58,10 @@ Recursing with input: 2
 ## Creating factorial function using recursion, base case n < 2 will return 1 otherwise prints n and returns n * the recursive function call with argument n - 1
 # O(N)
 def factorial(n):
-  if n < 2:
-    return 1
-  print(n)
-  return n * factorial(n-1)
+    if n < 2:
+        return 1
+    print(n)
+    return n * factorial(n-1)
 # factorial(999) will throw up a RecursionError
 print(factorial(999))
 
@@ -69,16 +69,16 @@ print(factorial(999))
 ## Creating power set function to expand any given list of items into all combinations of those items, using an iterative method
 # O(2^N)
 def power_set(set):
-  power_set_size = 2**len(set)
-  result = []
+    power_set_size = 2**len(set)
+    result = []
  
-  for bit in range(0, power_set_size):
-    sub_set = []
-    for binary_digit in range(0, len(set)):
-      if((bit & (1 << binary_digit)) > 0):
-        sub_set.append(set[binary_digit])
-    result.append(sub_set)
-  return result
+    for bit in range(0, power_set_size):
+        sub_set = []
+        for binary_digit in range(0, len(set)):
+            if((bit & (1 << binary_digit)) > 0):
+                sub_set.append(set[binary_digit])
+        result.append(sub_set)
+    return result
 
 ## Creating power set function using recursive method
 def power_set(my_list):
@@ -92,12 +92,12 @@ def power_set(my_list):
 # Return combination of the two
     return with_first + power_set_without_first
 
-# Example  
+# Example
 universities = ['MIT', 'UCLA', 'Stanford', 'NYU']
 power_set_of_universities = power_set(universities)
 
 for set in power_set_of_universities:
-  print(set)
+    print(set)
 # Output here would be:
 '''
 ['MIT', 'UCLA', 'Stanford', 'NYU']
@@ -121,17 +121,17 @@ for set in power_set_of_universities:
 
 ## Creating a flatten function to turn a list of lists into a simple list of items using a recursive method
 def flatten(my_list):
-  result = []
+    result = []
 # Recursive step here checks to see if an element in the list is a list itself, proceeds to recursively flatten that list, then add to the end of the result list
-  for item in my_list:
-    if isinstance(item, list):
-      print("List found!")
-      flat_list = flatten(item)
-      result += flat_list
+    for item in my_list:
+        if isinstance(item, list):
+            print("List found!")
+            flat_list = flatten(item)
+            result += flat_list
 # Base case here simple adds the item to the end of the result list
-    else:
-      result.append(item)
-  return result
+        else:
+            result.append(item)
+    return result
 
 # Example
 planets = ['mercury', 'venus', ['earth'], 'mars', [['jupiter', 'saturn']], 'uranus', ['neptune', 'pluto']]
@@ -150,12 +150,12 @@ List found!
 ## Creating a Fibonacci function using multiple recursive calls
 # O(2^N)
 def fibonacci(n):
-  if n == 1:
-    return 1
-  elif n == 0:
-    return 0
-  print(f'Adding {fibonacci(n-1)} + {fibonacci(n-2)}')
-  return fibonacci(n-1) + fibonacci(n-2)
+    if n == 1:
+        return 1
+    elif n == 0:
+        return 0
+    print(f'Adding {fibonacci(n-1)} + {fibonacci(n-2)}')
+    return fibonacci(n-1) + fibonacci(n-2)
 
 # Example
 fibonacci(5)
@@ -252,7 +252,7 @@ def move_to_end(lst, val):
     result = []
     if len(lst) == 0:
         return []
-# Recursive step, if the first value in the list is the value given, recursively call the other values into a new list and add the given value to the end        
+# Recursive step, if the first value in the list is the value given, recursively call the other values into a new list and add the given value to the end
     if lst[0] == val:
         result += move_to_end(lst[1:], val)
         result.append(lst[0])
@@ -275,17 +275,17 @@ from linked_lists import LinkedList, Node
 
 def remove_node(head, i):
 # Base case, if i is negative, returns head
-  if i < 0:
-    return head
+    if i < 0:
+        return head
 # If head doesn't exist, returns None
-  if head is None:
-    return None
+    if head is None:
+        return None
 # If the index we are looking for is the first index, returns head node's next node
-  if i == 0:
-    return head.next_node
+    if i == 0:
+        return head.next_node
 # Recursive step to search the remaining nodes to find the node at the given index
-  head.next_node = remove_node(head.next_node, i-1)
-  return head
+    head.next_node = remove_node(head.next_node, i-1)
+    return head
 
 # Example
 gemstones = LinkedList.LinkedList(["Amber", "Sapphire", "Jade", "Pearl"])

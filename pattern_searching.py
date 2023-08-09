@@ -36,31 +36,31 @@ pattern_search(text4, pattern4)
 ## Modified pattern_search function to include case sensitivity check and a way to replace a pattern with a given string
 # fixed_text variable is created to serve as a placeholder for the completed text containing all replacements being made
 def pattern_search(text, pattern, replacement, case_sensitive=True):
-  fixed_text = ''
-  num_skips = 0
-  for index in range(len(text)):
+    fixed_text = ''
+    num_skips = 0
+    for index in range(len(text)):
 # Decrementing our num_skips counter to account for the replacement of the pattern and loop further through the text indices
-    if num_skips > 0:
-      num_skips -= 1
-      continue
-    match_count = 0
+        if num_skips > 0:
+            num_skips -= 1
+            continue
+        match_count = 0
 # Changing the condition check to account for case sensitivity
-    for char in range(len(pattern)): 
-      if case_sensitive and pattern[char] == text[index + char]:
-        match_count += 1
-      elif not case_sensitive and pattern[char].lower() == text[index + char].lower(): 
-        match_count += 1
-      else:
-        break
+        for char in range(len(pattern)): 
+            if case_sensitive and pattern[char] == text[index + char]:
+                match_count += 1
+            elif not case_sensitive and pattern[char].lower() == text[index + char].lower(): 
+                match_count += 1
+            else:
+                break
 # When the replacement is found, we append it to the fixed_text variable and replace the value of num_skips to account for
 # the change in the text, otherwise we add the original character from the text
-    if match_count == len(pattern):
-      print(pattern, "found at index", index)
-      fixed_text += replacement
-      num_skips = len(pattern) - 1
-    else:
-      fixed_text += text[index]
-  return fixed_text
+        if match_count == len(pattern):
+            print(pattern, "found at index", index)
+            fixed_text += replacement
+            num_skips = len(pattern) - 1
+        else:
+            fixed_text += text[index]
+    return fixed_text
 
 friends_intro = "Pylhon is a wonderful Language that zzz is beloved for its ease zzz of use and simple syntacs. While zzz at some times the performance can be less than iDil, by properly zzz utilizing built-in libraries and other languuUuage features, pylhon's performance zzz can approach that of C."
 pattern_search(friends_intro, "Language", "language")

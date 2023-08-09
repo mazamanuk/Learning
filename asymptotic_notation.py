@@ -67,24 +67,24 @@ print("The runtime of find_max is O({0})".format(runtime))
 from linked_lists import LinkedList
 
 def find_max(linked_list):
-  current = linked_list.get_head_node()
-  maximum = current.get_value()
-  while current.get_next_node():
-    current = current.get_next_node()
-    val = current.get_value()
-    if val > maximum:
-      maximum = val
-  return maximum
+    current = linked_list.get_head_node()
+    maximum = current.get_value()
+    while current.get_next_node():
+        current = current.get_next_node()
+        val = current.get_value()
+        if val > maximum:
+            maximum = val
+    return maximum
 
 def sort_linked_list(linked_list):
-  print("\n---------------------------")
-  print("The original linked list is:\n{0}".format(linked_list.stringify_list()))
-  new_linked_list = LinkedList()
-  #Write Code Here!
-  while linked_list.get_head_node():
-    new_linked_list.insert_beginning(find_max(linked_list))
-    linked_list.remove_node(find_max(linked_list))
-  return new_linked_list
+    print("\n---------------------------")
+    print("The original linked list is:\n{0}".format(linked_list.stringify_list()))
+    new_linked_list = LinkedList()
+    #Write Code Here!
+    while linked_list.get_head_node():
+        new_linked_list.insert_beginning(find_max(linked_list))
+        linked_list.remove_node(find_max(linked_list))
+    return new_linked_list
 
 # Examples, creating linked lists and running the sort_linked_list function to sort the linked lists from smallest to largest values
 ll = LinkedList("Z")
@@ -148,7 +148,7 @@ print("The runtime of getting the front of the queue is O({0})".format(queue_run
 
 # Get First Value added to Stack
 while not my_stack.is_empty():
-  first_value_added_to_stack = my_stack.pop()
+    first_value_added_to_stack = my_stack.pop()
 print("\nThe first value pushed onto the stack was {0}".format(first_value_added_to_stack))
 stack_runtime = "N"
 print("The runtime of getting the bottom of the stack is O({0})".format(stack_runtime))
@@ -185,7 +185,7 @@ print("The runtime of retrieving a value from a hashmap is O({0})\n\n".format(ha
 # Get Zachary's Disease from a Linked List
 current = my_linked_list.get_head_node()
 while current.get_value()[0] != "Zachary":
-  current = current.get_next_node()
+    current = current.get_next_node()
 linked_list_zachary_disease = current.get_value()[1]
 print("Zachary's disease is {0}".format(linked_list_zachary_disease))
 linked_list_runtime = "N"
