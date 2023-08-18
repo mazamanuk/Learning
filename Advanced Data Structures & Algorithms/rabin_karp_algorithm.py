@@ -1,3 +1,6 @@
+prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
+                 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
+
 ## Revisiting naive pattern-matching
 # steps: iterate over the entire string to find all substrings equal in length to the pattern that we are trying to match
 # iterate over each substring, and check to see if this matches the pattern
@@ -83,34 +86,8 @@ print(colliding_hash_values)
 # Attempting to reduce the number of collisions by using prime values when hashing so prime factors are no longer an issue with strings containing different characters
 
 uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-prime_numbers = [
-    2,
-    3,
-    5,
-    7,
-    11,
-    13,
-    17,
-    19,
-    23,
-    29,
-    31,
-    37,
-    41,
-    43,
-    47,
-    53,
-    59,
-    61,
-    67,
-    71,
-    73,
-    79,
-    83,
-    89,
-    97,
-    101,
-]
+prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
+                 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
 
 
 def prime_value(c):
@@ -163,34 +140,8 @@ print(colliding_hash_values)
 # After calculating the rolling hash of "ABCD", we no longer need to calculate the hash of "BCD" for the next iteration, as we can simply divide by the hash of the character being removed and multiply by the hash of the character being added.
 
 uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-prime_numbers = [
-    2,
-    3,
-    5,
-    7,
-    11,
-    13,
-    17,
-    19,
-    23,
-    29,
-    31,
-    37,
-    41,
-    43,
-    47,
-    53,
-    59,
-    61,
-    67,
-    71,
-    73,
-    79,
-    83,
-    89,
-    97,
-    101,
-]
+prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
+                 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
 
 prime_values = {}
 for c in uppercase:
@@ -240,3 +191,84 @@ print(prime_rolling_hash_values)
 
 
 ## Polynomial hash function
+# Implementing a polynomial hash function that makes use of sums and products together to calculate a hash value and and is therefore almost entirely immune to hash values colliding
+
+uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
+def polynomial_hash(s):
+    # Initialise a hash value to 0 and add each character of the substring's ascii value multiplied by the alphabet size raised to the power of the number of remaining characters
+    hash_value = 0
+    pattern_length = len(s)
+    for char in range(pattern_length):
+        hash_value += ord(s[char]) * 26 ** (pattern_length - (char + 1))
+    return hash_value
+
+
+polynomial_hash_values = dict()
+
+# Loop through all substrings of length 4 in our uppercase variable, pass the value into the polynomial_hash function and store the value in the polynomial_hash_values dictionary
+for char in range(len(uppercase) - 3):
+    substring = uppercase[char : char + 4]
+    hash_value = polynomial_hash(substring)
+    polynomial_hash_values[substring] = hash_value
+
+print(polynomial_hash_values)
+# Output here will be:
+"""
+{'ABCD': 1188866, 'BCDE': 1207145, 'CDEF': 1225424, 'DEFG': 1243703, 'EFGH': 1261982, 'FGHI': 1280261, 'GHIJ': 1298540, 'HIJK': 1316819, 'IJKL': 1335098, 'JKLM': 1353377, 'KLMN': 1371656, 'LMNO': 1389935, 'MNOP': 1408214, 'NOPQ': 1426493, 'OPQR': 1444772, 'PQRS': 1463051, 'QRST': 1481330, 'RSTU': 1499609, 'STUV': 1517888, 'TUVW': 1536167, 'UVWX': 1554446, 'VWXY': 1572725, 'WXYZ': 1591004}
+"""
+
+
+## Exploiting the "rolling" property again
+# We want to be able to use a calculated value to create the next value in the hashing function, rather than recalculate every time, so we implement the rolling property with our polynomial hash function
+
+uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+# Calculating the polynomial rolling hash value (incorrectly) using previous rules
+polynomial_hash_ABCD = polynomial_hash("ABCD")
+rolling_hash_BCDE = polynomial_hash_ABCD - polynomial_hash("A") + polynomial_hash("E")
+polynomial_hash_BCDE = polynomial_hash("BCDE")
+print(rolling_hash_BCDE, polynomial_hash_BCDE)
+# Output here will be:
+"""
+1188870
+1207145
+"""
+
+# Correctly calculating the polynomial rolling hash by dividing by the correct factor of the removed character, "shifting" the remaining characters by multiplying by 26, and finally adding the correct value of the added character
+rolling_hash_BCDE = (polynomial_hash_ABCD - ord("A") * (26**3)) * 26 + ord("E")
+print(rolling_hash_BCDE, polynomial_hash_BCDE)
+# Output here will be:
+"""
+1207145
+1207145
+"""
+
+
+def polynomial_rolling_hash(s, H, c):
+    # Implementing the correct rolling hash method to a given string, its hash value and the next character in the sequence
+    H = (H - ord(s[0]) * 26 ** (len(s) - 1)) * 26 + ord(c)
+    return H
+
+
+# Calculating the polynomial rolling hash value for all 4 character substrings of our variable uppercase
+s = "ABCD"
+H = polynomial_hash(s)
+
+# Initialise a dictionary containing the hash value for "ABCD", to use the values while iterating
+polynomial_rolling_hash_values = {s: H}
+
+for char in uppercase[4:]:
+    # Calculating the polynomial rolling hash of the next substring
+    H = polynomial_rolling_hash(s, H, char)
+    # Shifting the string to create the next substring
+    s = s[1:] + char
+    # Storing the new string: hash as a key: value pair in our dictionary
+    polynomial_rolling_hash_values[s] = H
+
+print(polynomial_rolling_hash_values)
+# Output here will be:
+"""
+{'ABCD': 1188866, 'BCDE': 1207145, 'CDEF': 1225424, 'DEFG': 1243703, 'EFGH': 1261982, 'FGHI': 1280261, 'GHIJ': 1298540, 'HIJK': 1316819, 'IJKL': 1335098, 'JKLM': 1353377, 'KLMN': 1371656, 'LMNO': 1389935, 'MNOP': 1408214, 'NOPQ': 1426493, 'OPQR': 1444772, 'PQRS': 1463051, 'QRST': 1481330, 'RSTU': 1499609, 'STUV': 1517888, 'TUVW': 1536167, 'UVWX': 1554446, 'VWXY': 1572725, 'WXYZ': 1591004}
+"""
