@@ -1,6 +1,3 @@
-prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
-                 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
-
 ## Revisiting naive pattern-matching
 # steps: iterate over the entire string to find all substrings equal in length to the pattern that we are trying to match
 # iterate over each substring, and check to see if this matches the pattern
@@ -86,8 +83,7 @@ print(colliding_hash_values)
 # Attempting to reduce the number of collisions by using prime values when hashing so prime factors are no longer an issue with strings containing different characters
 
 uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
-                 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
+prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
 
 
 def prime_value(c):
@@ -140,8 +136,7 @@ print(colliding_hash_values)
 # After calculating the rolling hash of "ABCD", we no longer need to calculate the hash of "BCD" for the next iteration, as we can simply divide by the hash of the character being removed and multiply by the hash of the character being added.
 
 uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
-                 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
+prime_numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
 
 prime_values = {}
 for c in uppercase:
@@ -271,4 +266,65 @@ print(polynomial_rolling_hash_values)
 # Output here will be:
 """
 {'ABCD': 1188866, 'BCDE': 1207145, 'CDEF': 1225424, 'DEFG': 1243703, 'EFGH': 1261982, 'FGHI': 1280261, 'GHIJ': 1298540, 'HIJK': 1316819, 'IJKL': 1335098, 'JKLM': 1353377, 'KLMN': 1371656, 'LMNO': 1389935, 'MNOP': 1408214, 'NOPQ': 1426493, 'OPQR': 1444772, 'PQRS': 1463051, 'QRST': 1481330, 'RSTU': 1499609, 'STUV': 1517888, 'TUVW': 1536167, 'UVWX': 1554446, 'VWXY': 1572725, 'WXYZ': 1591004}
+"""
+
+# ------------------------------------------------------------------------------
+
+## Rabin-Karp Algorithm
+# Finally combining everything into our efficient pattern-searching algorithm
+# Rabin-Karp find the first substring equal in length to our pattern, compares its polynomial hash with that of the pattern and if they're equal, increases a counter by 1
+# It then iterates through the remaining substrings in order, if the polynomial hash of any substring matches that of pattern, increase the counter by 1 and return the counter at the end
+
+
+def rabin_karp_algorithm(pattern, text):
+    pattern_length = len(pattern)
+    text_length = len(text)
+    occurrences = 0
+    substring = text[: pattern_length]
+    substring_hash = polynomial_hash(substring)
+    pattern_hash = polynomial_hash(pattern)
+    if substring_hash == pattern_hash:
+        occurrences += 1
+    for character in text[pattern_length:]:
+        substring_hash = polynomial_rolling_hash(substring, substring_hash, character)
+        substring = substring[1:] + character
+        if substring_hash == pattern_hash:
+            occurrences += 1
+    return occurrences
+
+# Testing both pattern searching algorithms to compare runtime
+# smaller text with naive algorithm runtime: ~7.45s
+pattern = "A" * 1000
+text = "A" * 100000
+print(naive_pattern_matching(pattern, text))
+# Output here will be:
+"""
+99001
+"""
+
+# larger text with naive algorithm runtime: ~75.05s
+pattern = "A" * 1000
+text = "A" * 1000000
+print(naive_pattern_matching(pattern, text))
+# Output here will be:
+"""
+999001
+"""
+
+# smaller text with rabin-karp algorithm runtime: ~0.58s
+pattern = 'A' * 1000
+text = 'A' * 100000
+print(rabin_karp_algorithm(pattern, text))
+# Output here will be:
+"""
+99001
+"""
+
+# smaller text with rabin-karp algorithm runtime: ~5.81s
+pattern = 'A' * 1000
+text = 'A' * 1000000
+print(rabin_karp_algorithm(pattern, text))
+# Output here will be:
+"""
+999001
 """
