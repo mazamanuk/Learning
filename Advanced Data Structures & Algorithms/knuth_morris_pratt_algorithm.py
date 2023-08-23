@@ -8,7 +8,7 @@
 # The additional requirement is that the proper suffix must also be a proper prefix in the pattern
 
 
-def prefix_function(pattern):
+def inefficient_prefix_function(pattern):
     # Instantiate a list containing 0s for each character in the pattern
     pi = [0 for i in range(len(pattern))]
     # For each character from 1 to the length of the pattern, we check to see the longest proper prefix up to that character and see if it is equal to the proper suffix of the same length
@@ -21,7 +21,7 @@ def prefix_function(pattern):
     # Return our 
     return pi
 
-print(prefix_function('ababac'))
+print(inefficient_prefix_function('ababac'))
 # Output here will be:
 """
 [0, 0, 1, 2, 3, 0]
@@ -34,7 +34,7 @@ print(prefix_function('ababac'))
 # This leaves us with 3 cases: 1 - the value can increase by 1; 2 - the value can NOT increase at all i.e. stays the same; 3 - the value can actually decrease by a certain amount
 
 
-def prefix_function(pattern):
+def faster_prefix_function(pattern):
     pi = [0 for i in range(len(pattern))]
     for i in range(1, len(pattern)):
         # 1 - If there is a proper prefix of length pi[i - 1] + 1, that is also a proper suffix of the same length, this is the valid prefix/suffix we are looking for, update pi[i] to this length
@@ -63,13 +63,22 @@ def prefix_function(pattern):
 # In the opposite case that pattern[i] != pattern[pi[i - 1]], look for valid suffix of a shorter length j = pi[i - 1] - 1, index into the prefix function as pi[j] giving the length of the valid suffix ending at index j
 # Index into pattern as pattern[pi[j]] giving the character next to a valid prefix, check to see if pattern[i] == pattern[pi[j]] and we can loop the entire process above from this point onwards
 
+
 def prefix_function(pattern):
-  pi = [0 for i in range(len(pattern))]
-  for i in range(1, len(pattern)):
-    j = pi[i - 1]
-    while (j > 0 and pattern[i] != pattern[j]):
-      j = pi[j - 1]
-    if (pattern[i] == pattern[j]):
-      j += 1
-      pi[i] = j
-  return pi
+    # Initialise our list of 0s
+    pi = [0 for i in range(len(pattern))]
+    # Begin looping through the characters in our pattern
+    for i in range(1, len(pattern)):
+        # Initialise j to be pi[i - 1], this will be used to compute the length of the next valid suffix ending at i
+        j = pi[i - 1]
+        # Loop as long as our longest valid suffix is still greater than 0 and our current character is not equal to the character after the end of the longest valid suffix
+        while (j > 0 and pattern[i] != pattern[j]):
+            # Update j to equal the length of a shorter valid suffix i.e j = pi[j - 1]
+            j = pi[j - 1]
+        # If our character is equal to the longest valid suffix, then pattern[i] is part of the valid suffix ending at i, whose length is longer than the valid suffix ending at i - 1 by 1
+        # increment j by 1 and store the value in our pi list
+        if (pattern[i] == pattern[j]):
+            j += 1
+            pi[i] = j
+    # Finally return pi
+    return pi
