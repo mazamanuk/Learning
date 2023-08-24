@@ -82,3 +82,113 @@ def prefix_function(pattern):
             pi[i] = j
     # Finally return pi
     return pi
+
+
+## Implementing the Knuth-Morris-Pratt algorithm
+# We start the algorithm by matching the pattern against the text character-by-character, if there is a mismatch, we look for a shorter valid prefix that can potentially align with an existing valid suffix among the characters that have already matched (similar to how we calculated the prefix function)
+# However, unlike last time, we don't have to look for the length of a valid prefix all over again as it has been calculated and stored in the prefix function
+# Finally, if at any point the number of matched characters equals the length of the pattern, we will have found an occurrence of the pattern in the text
+# We can repeat the algorithm to find the next occurence by looking for a shorter valid prefix length
+
+
+def kmp_algorithm(pattern, text):
+    # Storing pattern and text lengths in variables along with our prefix function applied to pattern stored in pi, a variable j to store the number of characters matched so far and a variable count to store the number of occurrences of pattern in text
+    pattern_length = len(pattern)
+    text_length = len(text)
+    pi = prefix_function(pattern)
+    j = 0
+    count = 0
+    # Loop through each index in text
+    for i in range(text_length):
+        # Loops as long as number of matched characters is greater than 0 and the next character in the text isn't equal to the next character after j matches to set j to some shorter valid prefix, j = pi[j - 1] 
+        while (j > 0 and text[i] != pattern[j]):
+            j = pi[j - 1]
+        # If our next character matches, we increment our matched character count by 1
+        if text[i] == pattern[j]:
+            j += 1
+            # If the number of matches equals the length of our pattern we increment the occurrence count and reset j to some shorter valid suffix
+            if j == pattern_length:
+                count += 1
+                j = pi[j - 1]
+    # Finally return the number of occurrences of the pattern within the text
+    return count
+
+
+## Rabin-Karp vs KMP
+
+import time
+
+# Prefix function and KMP algorithm have been defined above so won't be redefined here
+
+# Redefining polynomial hash, polynomial rolling hash and Rabin-Karp algorithm functions to compare speeds
+def polynomial_hash(s):
+	hash_value = 0
+	for i in range(len(s)):
+		hash_value += (ord(s[i])*(26**(len(s) - i - 1)))
+	return hash_value
+
+def polynomial_rolling_hash(previous_hash, c1, c2, pattern_length):
+	return (previous_hash - ord(c1) * (26**(pattern_length - 1))) * 26 + ord(c2)
+
+def rabin_karp_algorithm(pattern, text):
+	pattern_hash = polynomial_hash(pattern)
+	occurrences = 0
+	text_length = len(text)
+	pattern_length = len(pattern)
+	substring_hash = polynomial_hash(text[:pattern_length])
+	if (substring_hash == pattern_hash):
+		occurrences += 1
+	for i in range(text_length - pattern_length):
+		previous_hash = substring_hash
+		substring_hash = polynomial_rolling_hash(previous_hash, text[i], text[i + pattern_length], pattern_length)
+		if (substring_hash == pattern_hash):
+			occurrences += 1
+	return occurrences
+
+
+pattern = ""
+for i in range(1000):
+  pattern += "A"
+text = ""
+for i in range(100000):
+	text += "A"
+
+# smaller text with Rabin-Karp algorithm runtime: 0.5520007610321045 seconds 
+start_time = time.time()
+print("Matches found: ", rabin_karp_algorithm(pattern, text))
+print("Rabin-Karp took %s seconds" % (time.time() - start_time))
+# Output here will be:
+"""
+99001
+"""
+
+# smaller text with Knuth-Morris-Pratt algorithm runtime: 0.023000478744506836 seconds
+start_time = time.time()
+print("Matches found: ", kmp_algorithm(pattern, text))
+print("KMP took %s seconds" % (time.time() - start_time))
+# Output here will be:
+"""
+99001
+"""
+
+pattern="ababbabbabbababbabb"
+text = 100000*pattern
+
+# larger text with Rabin-Karp algorithm runtime: 1.2552695274353027 seconds
+start_time = time.time()
+print("Matches found: ", rabin_karp_algorithm(pattern, text))
+print("Rabin-Karp took %s seconds" % (time.time() - start_time))
+# Output here will be:
+"""
+100000
+"""
+
+
+# larger text with Knuth-Morris-Pratt algorithm runtime: 0.37999892234802246 seconds
+start_time = time.time()
+print("Matches found: ", kmp_algorithm(pattern, text))
+print("KMP took %s seconds" % (time.time() - start_time))
+# Output here will be:
+"""
+100000
+"""
