@@ -1,4 +1,4 @@
-from solution import Solution
+from contains_duplicate import Solution
 
 def test_contains_duplicate():
     sol = Solution()

@@ -1,4 +1,4 @@
-from solution import Solution
+from valid_anagram import Solution
 
 def test_is_anagram():
     sol = Solution()
